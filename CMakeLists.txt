@@ -6,15 +6,29 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 # Include NDI SDK and OpenCV directories
 include_directories(/Users/bgillock/Documents/DistroAV/lib/ndi/)
-include_directories(/Users/bgillock/Documents/source/opencv/install/include/opencv4/)
+include_directories(/Users/bgillock/Documents/opencv/install/include/opencv4/)
 
 # Add executable
 add_executable(mp4ndi ndi-video-sender.cpp)
 
-# Link libraries
+# Find required frameworks
+find_library(COREFOUNDATION_FRAMEWORK CoreFoundation)
+find_library(AVFOUNDATION_FRAMEWORK AVFoundation)
+find_library(COREMEDIA_FRAMEWORK CoreMedia)
+find_library(COREVIDEO_FRAMEWORK CoreVideo)
 
-target_link_libraries(mp4ndi /Users/bgillock/Documents/source/opencv/install/lib/libopencv_core.dylib)
-target_link_libraries(mp4ndi /Users/bgillock/Documents/source/opencv/install/lib/libopencv_videoio.dylib)
-target_link_libraries(mp4ndi /Users/bgillock/Documents/source/opencv/install/lib/libopencv_imgproc.dylib)
-target_link_libraries(mp4ndi /Users/bgillock/Documents/source/opencv/install/lib/libopencv_highgui.dylib)
-target_link_libraries(mp4ndi /usr/local/lib/libndi.dylib)
+# Find OpenCV components
+find_package(OpenCV REQUIRED PATHS /Users/bgillock/Documents/opencv/install NO_DEFAULT_PATH)
+
+# Link libraries
+target_link_libraries(mp4ndi 
+    ${OpenCV_LIBS}
+    /usr/local/lib/libndi.dylib
+    -lpthread
+    -ldl
+    -lz
+    ${COREFOUNDATION_FRAMEWORK}
+    ${AVFOUNDATION_FRAMEWORK}
+    ${COREMEDIA_FRAMEWOpRK}
+    ${COREVIDEO_FRAMEWORK}
+)
